@@ -22,7 +22,7 @@ import java.util.List;
  */
 public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
 
-    private static String TAG = CameraPreview.class.getName();
+    public static String TAG = CameraPreview.class.getName();
 
     private Camera           camera;
     private AutoFocusManager mAutoFocusManager;
@@ -68,16 +68,21 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 
                 Camera.Parameters parameters = camera.getParameters();
                 if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+                    Log.d(CameraPreview.TAG, " 当前屏幕是竖屏");
                     //竖屏拍照时，需要设置旋转90度，否者看到的相机预览方向和界面方向不相同
                     camera.setDisplayOrientation(90);
                     parameters.setRotation(90);
                 } else {
+                    Log.d(CameraPreview.TAG, " 当前屏幕是横屏");
                     camera.setDisplayOrientation(0);
                     parameters.setRotation(0);
                 }
                 List<Camera.Size> sizeList = parameters.getSupportedPreviewSizes();//获取所有支持的预览大小
+
                 Camera.Size bestSize = getOptimalPreviewSize(sizeList, ScreenUtils.getScreenWidth(mContext), ScreenUtils.getScreenHeight(mContext));
                 parameters.setPreviewSize(bestSize.width, bestSize.height);//设置预览大小
+                Log.d(CameraPreview.TAG, "获取所有支持的预览大小，根据屏幕宽高获取最佳预览大小width="
+                        +bestSize.width + ", height="+bestSize.height);
                 camera.setParameters(parameters);
                 camera.startPreview();
                 focus();//首次对焦

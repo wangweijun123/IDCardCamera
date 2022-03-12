@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.hardware.Camera;
 import android.os.Bundle;
@@ -117,9 +118,11 @@ public class CameraActivity extends Activity implements View.OnClickListener {
         mViewCameraCropBottom = (TextView) findViewById(R.id.view_camera_crop_bottom);
         mFlCameraOption = (FrameLayout) findViewById(R.id.fl_camera_option);
         mViewCameraCropLeft = findViewById(R.id.view_camera_crop_left);
-
-        float screenMinSize = Math.min(ScreenUtils.getScreenWidth(this), ScreenUtils.getScreenHeight(this));
-        float screenMaxSize = Math.max(ScreenUtils.getScreenWidth(this), ScreenUtils.getScreenHeight(this));
+        int screenWidth = ScreenUtils.getScreenWidth(this);
+        int screenHeight = ScreenUtils.getScreenHeight(this);
+        Log.d(CameraPreview.TAG, "屏幕的宽高 screenWidth=" +screenWidth+", screenHeight:"+screenHeight);
+        float screenMinSize = Math.min(screenWidth, screenHeight);
+        float screenMaxSize = Math.max(screenWidth, screenHeight);
         float height = (int) (screenMinSize * 0.75);
         float width = (int) (height * 75.0f / 47.0f);
         //获取底部"操作区域"的宽度
@@ -128,7 +131,8 @@ public class CameraActivity extends Activity implements View.OnClickListener {
         LinearLayout.LayoutParams cropParams = new LinearLayout.LayoutParams((int) width, (int) height);
         LinearLayout.LayoutParams cameraOptionParams = new LinearLayout.LayoutParams((int) flCameraOptionWidth, ViewGroup.LayoutParams.MATCH_PARENT);
         mLlCameraCropContainer.setLayoutParams(containerParams);
-        mIvCameraCrop.setLayoutParams(cropParams);
+        mIvCameraCrop.setLayoutParams(cropParams); // 这是裁剪区域的宽高
+        Log.d(CameraPreview.TAG, "裁剪区域的宽高 width=" +width+", height:"+height);
         //获取"相机裁剪区域"的宽度来动态设置底部"操作区域"的宽度，使"相机裁剪区域"居中
         mFlCameraOption.setLayoutParams(cameraOptionParams);
 
@@ -201,14 +205,18 @@ public class CameraActivity extends Activity implements View.OnClickListener {
         CameraUtils.getCamera().setOneShotPreviewCallback(new Camera.PreviewCallback() {
             @Override
             public void onPreviewFrame(final byte[] bytes, Camera camera) {
-                final Camera.Size size = camera.getParameters().getPreviewSize(); //获取预览大小
+                final Camera.Size size = camera.getParameters().getPreviewSize(); //获取预览大小 height:1440 width:3200
+
                 camera.stopPreview();
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
                         final int w = size.width;
                         final int h = size.height;
+                        Log.d(CameraPreview.TAG, "获取预览大小 W=" +w + ", h="+h);
+                        Log.d(CameraPreview.TAG, "拍照返回的预览的字节数组生成bitmap，这是一张大的图片");
                         Bitmap bitmap = ImageUtils.getBitmapFromByte(bytes, w, h);
+                        Log.d(CameraPreview.TAG, "裁剪bitmap");
                         cropImage(bitmap);
                     }
                 }).start();
@@ -225,19 +233,37 @@ public class CameraActivity extends Activity implements View.OnClickListener {
         float top = mIvCameraCrop.getTop();
         float right = mIvCameraCrop.getRight() + left;
         float bottom = mIvCameraCrop.getBottom();
+        Log.d(CameraPreview.TAG, "计算扫描框view的坐标点 left:"+left
+                +", top:"+top+", right:"+right+", bottom:"+bottom);
 
         /*计算扫描框坐标点占原图坐标点的比例*/
         float leftProportion = left / mCameraPreview.getWidth();
         float topProportion = top / mCameraPreview.getHeight();
         float rightProportion = right / mCameraPreview.getWidth();
         float bottomProportion = bottom / mCameraPreview.getBottom();
+        Log.d(CameraPreview.TAG, "preview 大小: mCameraPreview.getWidth():"
+                +mCameraPreview.getWidth()+", mCameraPreview.getHeight():"
+                +mCameraPreview.getHeight()+
+                ", mCameraPreview.getBottom():"+mCameraPreview.getBottom());
 
-        /*自动裁剪*/
-        mCropBitmap = Bitmap.createBitmap(bitmap,
-                (int) (leftProportion * (float) bitmap.getWidth()),
-                (int) (topProportion * (float) bitmap.getHeight()),
-                (int) ((rightProportion - leftProportion) * (float) bitmap.getWidth()),
-                (int) ((bottomProportion - topProportion) * (float) bitmap.getHeight()));
+        Log.d(CameraPreview.TAG, "计算扫描框坐标点占原图坐标点的比例 leftProportion:"+leftProportion
+                +", topProportion:"+topProportion+", rightProportion:"
+                +rightProportion+", bottomProportion:"+bottomProportion);
+
+        Log.d(CameraPreview.TAG, "开始按照比例裁剪 Bitmap.createBitmap");
+        Log.d(CameraPreview.TAG, "图片的bitmap.getWidth()="+bitmap.getWidth()
+                +", bitmap.getHeight() = "+bitmap.getHeight());
+
+        int x = (int) (leftProportion * (float) bitmap.getWidth());
+        int y = (int) (topProportion * (float) bitmap.getHeight());
+        int width = (int) ((rightProportion - leftProportion) * (float) bitmap.getWidth());
+        int height = (int) ((bottomProportion - topProportion) * (float) bitmap.getHeight());
+                /*自动裁剪*/
+        Log.d(CameraPreview.TAG, "裁剪x="+x+", y="+y+", width="+width+", height="+height);
+        mCropBitmap = Bitmap.createBitmap(bitmap,x,y,width,height);
+
+        // 不裁剪
+//        mCropBitmap = Bitmap.createBitmap(bitmap,0,0,bitmap.getWidth(),bitmap.getHeight());
 
         /*设置成手动裁剪模式*/
         runOnUiThread(new Runnable() {
