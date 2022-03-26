@@ -62,6 +62,18 @@ public class IDCardCamera {
         }
     }
 
+    public void openCameraNew(int IDCardDirection) {
+        Activity activity = this.mActivity.get();
+        Fragment fragment = this.mFragment.get();
+        Intent intent = new Intent(activity, CameraPortraitActivity.class);
+        intent.putExtra(TAKE_TYPE, IDCardDirection);
+        if (fragment != null) {
+            fragment.startActivityForResult(intent, IDCardDirection);
+        } else {
+            activity.startActivityForResult(intent, IDCardDirection);
+        }
+    }
+
     /**
      * 获取图片路径
      *

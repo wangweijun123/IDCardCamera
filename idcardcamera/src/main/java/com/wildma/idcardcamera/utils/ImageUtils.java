@@ -1,11 +1,15 @@
 package com.wildma.idcardcamera.utils;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
 import android.graphics.ImageFormat;
 import android.graphics.Rect;
 import android.graphics.YuvImage;
+import android.util.Log;
+
+import com.wildma.idcardcamera.camera.CameraPreview;
 
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
@@ -13,6 +17,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 /**
  * Author   wildma
@@ -117,5 +123,36 @@ public class ImageUtils {
         byte[] tmp = os.toByteArray();
         Bitmap bmp = BitmapFactory.decodeByteArray(tmp, 0, tmp.length);
         return bmp;
+    }
+
+    public static boolean saveBigImage(Context context, Bitmap bitmap) {
+        File file = createFile(getOutputDirectory(context), FILENAME, PHOTO_EXTENSION);
+        Log.d(CameraPreview.TAG, "图片地址::" + file.getAbsolutePath());
+        boolean save = ImageUtils.save(bitmap, file.getAbsolutePath(), Bitmap.CompressFormat.JPEG);
+        return save;
+    }
+    public static final String FILENAME = "yyyy-MM-dd-HH-mm-ss-SSS";
+    public static final String PHOTO_EXTENSION = ".jpg";
+
+
+    public static  File createFile(File baseFolder, String format, String extension)  {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format, Locale.US);
+        return new File(baseFolder, simpleDateFormat.format(System.currentTimeMillis()) + extension);
+    }
+
+    public static File getOutputDirectory(Context context) {
+        File[] externalMediaDirs = context.getExternalMediaDirs();
+        if (externalMediaDirs != null && externalMediaDirs.length > 0) {
+            File externalMediaDir = externalMediaDirs[0];
+            Log.d(CameraPreview.TAG,"externalMediaDir= "+externalMediaDir.getAbsolutePath());
+            File wangweijun = new File(externalMediaDir, "wangweijun");
+            if (!wangweijun.exists()) {
+                wangweijun.mkdirs();
+            }
+            Log.d(CameraPreview.TAG,"最终输出目录 wangweijun= "+wangweijun.getAbsolutePath());
+            return wangweijun;
+        } else {
+            return context.getFilesDir();
+        }
     }
 }

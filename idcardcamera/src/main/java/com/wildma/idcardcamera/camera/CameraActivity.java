@@ -2,6 +2,7 @@ package com.wildma.idcardcamera.camera;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
@@ -30,6 +31,8 @@ import com.wildma.idcardcamera.utils.PermissionUtils;
 import com.wildma.idcardcamera.utils.ScreenUtils;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 
 /**
@@ -120,9 +123,10 @@ public class CameraActivity extends Activity implements View.OnClickListener {
         mViewCameraCropLeft = findViewById(R.id.view_camera_crop_left);
         int screenWidth = ScreenUtils.getScreenWidth(this);
         int screenHeight = ScreenUtils.getScreenHeight(this);
-        Log.d(CameraPreview.TAG, "屏幕的宽高 screenWidth=" +screenWidth+", screenHeight:"+screenHeight);
+
         float screenMinSize = Math.min(screenWidth, screenHeight);
         float screenMaxSize = Math.max(screenWidth, screenHeight);
+        Log.d(CameraPreview.TAG, "屏幕的 screenMinSize=" +screenMinSize+", screenMaxSize:"+screenMaxSize);
         float height = (int) (screenMinSize * 0.75);
         float width = (int) (height * 75.0f / 47.0f);
         //获取底部"操作区域"的宽度
@@ -206,7 +210,7 @@ public class CameraActivity extends Activity implements View.OnClickListener {
             @Override
             public void onPreviewFrame(final byte[] bytes, Camera camera) {
                 final Camera.Size size = camera.getParameters().getPreviewSize(); //获取预览大小 height:1440 width:3200
-
+                Log.d(CameraPreview.TAG, "返回bytes长度=" + bytes.length);
                 camera.stopPreview();
                 new Thread(new Runnable() {
                     @Override
@@ -214,15 +218,24 @@ public class CameraActivity extends Activity implements View.OnClickListener {
                         final int w = size.width;
                         final int h = size.height;
                         Log.d(CameraPreview.TAG, "获取预览大小 W=" +w + ", h="+h);
+
+                        Bitmap bigBitmap = ImageUtils.getBitmapFromByte(bytes, w, h);
                         Log.d(CameraPreview.TAG, "拍照返回的预览的字节数组生成bitmap，这是一张大的图片");
-                        Bitmap bitmap = ImageUtils.getBitmapFromByte(bytes, w, h);
-                        Log.d(CameraPreview.TAG, "裁剪bitmap");
-                        cropImage(bitmap);
+                        boolean success = ImageUtils.saveBigImage(getApplicationContext(), bigBitmap);
+                        Log.d(CameraPreview.TAG, "保存big bitmap success ? " + success);
+                        cropImage(bigBitmap);
                     }
                 }).start();
             }
+
+
         });
     }
+
+
+
+
+
 
     /**
      * 裁剪图片
@@ -262,6 +275,10 @@ public class CameraActivity extends Activity implements View.OnClickListener {
         Log.d(CameraPreview.TAG, "裁剪x="+x+", y="+y+", width="+width+", height="+height);
         mCropBitmap = Bitmap.createBitmap(bitmap,x,y,width,height);
 
+        File cropfile = ImageUtils.createFile(ImageUtils.getOutputDirectory(getApplicationContext()), ImageUtils.FILENAME, ImageUtils.PHOTO_EXTENSION);
+        Log.d(CameraPreview.TAG, "裁剪图片保存地址=" + cropfile.getAbsolutePath());
+        boolean save = ImageUtils.save(mCropBitmap, cropfile.getAbsolutePath(), Bitmap.CompressFormat.JPEG);
+        Log.d(CameraPreview.TAG, "裁剪图片保存成功 ? " + save);
         // 不裁剪
 //        mCropBitmap = Bitmap.createBitmap(bitmap,0,0,bitmap.getWidth(),bitmap.getHeight());
 

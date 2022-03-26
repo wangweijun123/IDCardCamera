@@ -36,6 +36,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
+     * 身份证正面
+     */
+    public void frontNew(View view) {
+        IDCardCamera.create(this).openCameraNew(IDCardCamera.TYPE_IDCARD_FRONT);
+    }
+
+
+    /**
      * 身份证反面
      */
     public void back(View view) {

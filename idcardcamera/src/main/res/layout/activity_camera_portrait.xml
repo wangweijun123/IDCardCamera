@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+    <!-- android:background="@color/color_000000" -->
+
+    <!--相机预览-->
+    <com.wildma.idcardcamera.camera.CameraPreview
+        android:id="@+id/camera_preview"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:background="@color/preview_mock"
+            android:id="@+id/headerMock"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="200dp">
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/preview_mock_red"
+                android:id="@+id/leftMock"/>
+            <!--相机裁剪区域-->
+            <ImageView
+                android:id="@+id/iv_camera_crop"
+                android:layout_width="300dp"
+                android:layout_height="match_parent"
+                android:scaleType="fitXY"
+                android:src="@mipmap/camera_idcard_back" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/preview_mock_red" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:background="@color/preview_mock_blue">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="front side of Id Card"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@color/preview_mock" >
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="拍照"
+                android:id="@+id/iv_camera_take"/>
+        </LinearLayout>
+
+    </LinearLayout>
+</RelativeLayout>

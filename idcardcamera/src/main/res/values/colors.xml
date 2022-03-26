@@ -3,4 +3,7 @@
     <color name="preview_mock">#9a000000</color> <!-- 9a是透明的哈 -->
     <color name="color_000000">#000000</color>
     <color name="color_afff">#afff</color>
+
+    <color name="preview_mock_red">#9aff0000</color>
+    <color name="preview_mock_blue">#9a00ff00</color>
 </resources>

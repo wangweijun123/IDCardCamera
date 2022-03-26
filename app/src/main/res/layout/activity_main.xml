@@ -49,6 +49,31 @@
             android:layout_marginTop="10dp"
             android:scaleType="fitCenter"/>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:onClick="frontNew"
+                android:text="身份证正面new"
+                android:textSize="16sp"/>
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:onClick="backNew"
+                android:text="身份证反面new"
+                android:textSize="16sp"/>
+        </LinearLayout>
     </LinearLayout>
 
 </ScrollView>
