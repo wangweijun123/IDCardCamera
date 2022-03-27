@@ -10,12 +10,6 @@ import android.util.Log;
 
 import java.util.Calendar;
 
-/**
- * Author       wildma
- * Github       https://github.com/wildma
- * Date         2018/6/24
- * Desc	        ${加速度控制器，用来控制对焦}
- */
 public class SensorControler implements SensorEventListener {
     public static final String TAG = "SensorControler";
     private SensorManager mSensorManager;
@@ -90,17 +84,10 @@ public class SensorControler implements SensorEventListener {
                 int px = Math.abs(mX - x);
                 int py = Math.abs(mY - y);
                 int pz = Math.abs(mZ - z);
-                //                Log.d(TAG, "pX:" + px + "  pY:" + py + "  pZ:" + pz + "    stamp:"
-                //                        + stamp + "  second:" + second);
                 double value = Math.sqrt(px * px + py * py + pz * pz);
                 if (value > 1.4) {
-                    //                    textviewF.setText("检测手机在移动..");
-                    //                    Log.i(TAG,"mobile moving");
                     STATUE = STATUS_MOVE;
                 } else {
-                    //                    textviewF.setText("检测手机静止..");
-                    //                    Log.i(TAG,"mobile static");
-                    //上一次状态是move，记录静态时间点
                     if (STATUE == STATUS_MOVE) {
                         lastStaticStamp = stamp;
                         canFocusIn = true;

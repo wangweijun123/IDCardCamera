@@ -20,13 +20,6 @@ import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
-/**
- * Author   wildma
- * Github   https://github.com/wildma
- * Date     2018/6/24
- * Desc     ${图片相关工具类}
- */
-
 public class ImageUtils {
 
     /**

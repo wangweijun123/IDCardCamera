@@ -1,11 +1,5 @@
 package com.wildma.idcardcamera.utils;
 
-/**
- * Author       wildma
- * Github       https://github.com/wildma
- * Date         2019/07/16
- * Desc	        ${公用工具类}
- */
 public class CommonUtils {
 
     private static long lastClickTime;

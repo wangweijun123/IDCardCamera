@@ -11,13 +11,6 @@ import android.support.v4.app.ActivityCompat;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Author       wildma
- * Github       https://github.com/wildma
- * Date         2018/6/10
- * Desc	        ${权限工具类}
- */
-
 public class PermissionUtils {
 
     /**

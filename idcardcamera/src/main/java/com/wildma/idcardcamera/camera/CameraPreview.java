@@ -14,18 +14,11 @@ import com.wildma.idcardcamera.utils.ScreenUtils;
 
 import java.util.List;
 
-/**
- * Author       wildma
- * Github       https://github.com/wildma
- * Date         2018/6/24
- * Desc	        ${相机预览}
- */
 public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
 
     public static String TAG = CameraPreview.class.getName();
 
     private Camera           camera;
-    private AutoFocusManager mAutoFocusManager;
     private SensorControler  mSensorControler;
     private Context          mContext;
     private SurfaceHolder    mSurfaceHolder;
@@ -86,7 +79,6 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
                 camera.setParameters(parameters);
                 camera.startPreview();
                 focus();//首次对焦
-                //mAutoFocusManager = new AutoFocusManager(camera);//定时对焦
             } catch (Exception e) {
                 Log.d(TAG, "Error setting camera preview: " + e.getMessage());
                 try {
@@ -102,7 +94,6 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
                     camera.setParameters(parameters);
                     camera.startPreview();
                     focus();//首次对焦
-                    //mAutoFocusManager = new AutoFocusManager(camera);//定时对焦
                 } catch (Exception e1) {
                     e.printStackTrace();
                     camera = null;
@@ -173,11 +164,6 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
             camera.stopPreview();
             camera.release();
             camera = null;
-
-            if (mAutoFocusManager != null) {
-                mAutoFocusManager.stop();
-                mAutoFocusManager = null;
-            }
         }
     }
 

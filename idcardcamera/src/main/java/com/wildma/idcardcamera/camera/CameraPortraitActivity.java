@@ -4,42 +4,25 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.content.pm.PackageManager;
-import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
 
 import com.wildma.idcardcamera.R;
 import com.wildma.idcardcamera.utils.CommonUtils;
-import com.wildma.idcardcamera.utils.FileUtils;
 import com.wildma.idcardcamera.utils.ImageUtils;
 import com.wildma.idcardcamera.utils.PermissionUtils;
-import com.wildma.idcardcamera.utils.ScreenUtils;
-
 import java.io.File;
 
-
-/**
- * Author       wildma
- * Github       https://github.com/wildma
- * Date         2018/6/24
- * Desc	        ${拍照界面}
- */
 public class CameraPortraitActivity extends Activity implements View.OnClickListener {
 
+    private static final int PERMISSION_CODE_FIRST = 1;
     private CameraPreview mCameraPreview;
     private ImageView     mIvCameraCrop;
     private Bitmap        mCropBitmap;
@@ -52,7 +35,7 @@ public class CameraPortraitActivity extends Activity implements View.OnClickList
         super.onCreate(savedInstanceState);
 
         /*动态请求需要的权限*/
-        boolean checkPermissionFirst = PermissionUtils.checkPermissionFirst(this, IDCardCamera.PERMISSION_CODE_FIRST,
+        boolean checkPermissionFirst = PermissionUtils.checkPermissionFirst(this, PERMISSION_CODE_FIRST,
                 new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA});
         if (checkPermissionFirst) {
             init();
@@ -181,17 +164,13 @@ public class CameraPortraitActivity extends Activity implements View.OnClickList
 
         boolean success = ImageUtils.saveBigImage(cropfile, mCropBitmap);
         Log.d(CameraPreview.TAG, "保存裁剪后的图片 success ? " + success);
-        // 设置成手动裁剪模式
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                //将手动裁剪区域设置成与扫描框一样大
-
                 mIvCameraCrop.setImageBitmap(mCropBitmap);
-
                 Intent intent = new Intent();
-                intent.putExtra(IDCardCamera.IMAGE_PATH, cropfile.getAbsolutePath());
-                setResult(IDCardCamera.RESULT_CODE, intent);
+                intent.putExtra("image_path", cropfile.getAbsolutePath());
+                setResult(Activity.RESULT_OK, intent);
                 finish();
             }
         });

@@ -4,12 +4,6 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.hardware.Camera;
 
-/**
- * Author       wildma
- * Github       https://github.com/wildma
- * Date         2018/6/24
- * Desc	        ${相机工具类}
- */
 public class CameraUtils {
 
     private static Camera camera;
