@@ -181,27 +181,6 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     }
 
     /**
-     * 开关闪光灯
-     *
-     * @return 闪光灯是否开启
-     */
-    public boolean switchFlashLight() {
-        if (camera != null) {
-            Camera.Parameters parameters = camera.getParameters();
-            if (parameters.getFlashMode().equals(Camera.Parameters.FLASH_MODE_OFF)) {
-                parameters.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
-                camera.setParameters(parameters);
-                return true;
-            } else {
-                parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
-                camera.setParameters(parameters);
-                return false;
-            }
-        }
-        return false;
-    }
-
-    /**
      * 拍摄照片
      *
      * @param pictureCallback 在pictureCallback处理拍照回调

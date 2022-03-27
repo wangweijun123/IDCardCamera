@@ -1,5 +1,8 @@
 package com.wildma.idcardcamera.utils;
 
+import static com.wildma.idcardcamera.camera.CameraActivity.FILENAME;
+import static com.wildma.idcardcamera.camera.CameraActivity.PHOTO_EXTENSION;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
@@ -123,11 +126,8 @@ public class ImageUtils {
         boolean save = ImageUtils.save(bitmap, file.getAbsolutePath(), Bitmap.CompressFormat.JPEG);
         return save;
     }
-    public static final String FILENAME = "yyyy-MM-dd-HH-mm-ss-SSS";
-    public static final String PHOTO_EXTENSION = ".jpg";
 
-
-    public static  File createFile(File baseFolder, String format, String extension)  {
+    public static File createFile(File baseFolder, String format, String extension) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format, Locale.US);
         return new File(baseFolder, simpleDateFormat.format(System.currentTimeMillis()) + extension);
     }
@@ -136,13 +136,12 @@ public class ImageUtils {
         File[] externalMediaDirs = context.getExternalMediaDirs();
         if (externalMediaDirs != null && externalMediaDirs.length > 0) {
             File externalMediaDir = externalMediaDirs[0];
-            Log.d(CameraPreview.TAG,"externalMediaDir= "+externalMediaDir.getAbsolutePath());
-            File wangweijun = new File(externalMediaDir, "wangweijun");
-            if (!wangweijun.exists()) {
-                wangweijun.mkdirs();
+            Log.d(CameraPreview.TAG, "externalMediaDir= " + externalMediaDir.getAbsolutePath());
+            File imageCacheDir = new File(externalMediaDir, "imagecache");
+            if (!imageCacheDir.exists()) {
+                imageCacheDir.mkdirs();
             }
-            Log.d(CameraPreview.TAG,"最终输出目录 wangweijun= "+wangweijun.getAbsolutePath());
-            return wangweijun;
+            return imageCacheDir;
         } else {
             return context.getFilesDir();
         }

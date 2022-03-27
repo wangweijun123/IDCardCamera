@@ -71,7 +71,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:onClick="backNew"
-                android:text="身份证反面new"
+                android:text="文件存在"
                 android:textSize="16sp"/>
         </LinearLayout>
     </LinearLayout>
