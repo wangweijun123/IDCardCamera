@@ -125,8 +125,7 @@ public class ImageUtils {
         return bmp;
     }
 
-    public static boolean saveBigImage(Context context, Bitmap bitmap) {
-        File file = createFile(getOutputDirectory(context), FILENAME, PHOTO_EXTENSION);
+    public static boolean saveBigImage(File file, Bitmap bitmap) {
         Log.d(CameraPreview.TAG, "图片地址::" + file.getAbsolutePath());
         boolean save = ImageUtils.save(bitmap, file.getAbsolutePath(), Bitmap.CompressFormat.JPEG);
         return save;

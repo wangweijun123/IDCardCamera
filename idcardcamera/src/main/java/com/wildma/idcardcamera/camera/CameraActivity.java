@@ -221,7 +221,9 @@ public class CameraActivity extends Activity implements View.OnClickListener {
 
                         Bitmap bigBitmap = ImageUtils.getBitmapFromByte(bytes, w, h);
                         Log.d(CameraPreview.TAG, "拍照返回的预览的字节数组生成bitmap，这是一张大的图片");
-                        boolean success = ImageUtils.saveBigImage(getApplicationContext(), bigBitmap);
+                        File bigFile = ImageUtils.createFile(ImageUtils.getOutputDirectory(getApplicationContext()),
+                                ImageUtils.FILENAME, ImageUtils.PHOTO_EXTENSION);
+                        boolean success = ImageUtils.saveBigImage(bigFile, bigBitmap);
                         Log.d(CameraPreview.TAG, "保存big bitmap success ? " + success);
                         cropImage(bigBitmap);
                     }

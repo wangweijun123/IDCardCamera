@@ -23,8 +23,6 @@ import android.widget.Toast;
 
 
 import com.wildma.idcardcamera.R;
-import com.wildma.idcardcamera.cropper.CropImageView;
-import com.wildma.idcardcamera.cropper.CropListener;
 import com.wildma.idcardcamera.utils.CommonUtils;
 import com.wildma.idcardcamera.utils.FileUtils;
 import com.wildma.idcardcamera.utils.ImageUtils;
@@ -72,7 +70,7 @@ public class CameraPortraitActivity extends Activity implements View.OnClickList
 
     private void initView() {
         mCameraPreview = (CameraPreview) findViewById(R.id.camera_preview);
-        mIvCameraCrop = (ImageView) findViewById(R.id.iv_camera_crop);
+        mIvCameraCrop = (ImageView) findViewById(R.id.cropIv);
         leftMock = findViewById(R.id.leftMock);
         headerMock = findViewById(R.id.headerMock);
         /*增加0.5秒过渡界面，解决个别手机首次申请权限导致预览界面启动慢的问题*/
@@ -91,6 +89,7 @@ public class CameraPortraitActivity extends Activity implements View.OnClickList
 
     private void initListener() {
         findViewById(R.id.iv_camera_take).setOnClickListener(this);
+        mCameraPreview.setOnClickListener(this);
     }
 
     @Override
@@ -119,7 +118,6 @@ public class CameraPortraitActivity extends Activity implements View.OnClickList
             @Override
             public void onPreviewFrame(final byte[] bytes, Camera camera) {
                 final Camera.Size size = camera.getParameters().getPreviewSize(); //获取预览大小 height:1440 width:3200
-
                 camera.stopPreview();
                 new Thread(new Runnable() {
                     @Override
@@ -130,7 +128,9 @@ public class CameraPortraitActivity extends Activity implements View.OnClickList
 
                         Bitmap bigBitmap = ImageUtils.getBitmapFromByte(bytes, w, h);
                         Log.d(CameraPreview.TAG, "拍照返回的预览的字节数组生成bitmap，这是一张大的图片");
-                        boolean success = ImageUtils.saveBigImage(getApplicationContext(), bigBitmap);
+                        final File bigFile = ImageUtils.createFile(ImageUtils.getOutputDirectory(getApplicationContext()),
+                                ImageUtils.FILENAME, ImageUtils.PHOTO_EXTENSION);
+                        boolean success = ImageUtils.saveBigImage(bigFile, bigBitmap);
                         Log.d(CameraPreview.TAG, "保存big bitmap success ? " + success);
                         cropImage(bigBitmap);
                     }
@@ -175,7 +175,11 @@ public class CameraPortraitActivity extends Activity implements View.OnClickList
         Log.d(CameraPreview.TAG,"x="+x+", y="+y+", cropWidth="+cropWidth+", cropHeight="+cropHeight);
         // 不裁剪
         mCropBitmap = Bitmap.createBitmap(bitmapRotate,x,y,cropWidth,cropHeight);
-        boolean success = ImageUtils.saveBigImage(getApplicationContext(), mCropBitmap);
+
+        final File cropfile = ImageUtils.createFile(ImageUtils.getOutputDirectory(getApplicationContext()),
+                ImageUtils.FILENAME, ImageUtils.PHOTO_EXTENSION);
+
+        boolean success = ImageUtils.saveBigImage(cropfile, mCropBitmap);
         Log.d(CameraPreview.TAG, "保存裁剪后的图片 success ? " + success);
         // 设置成手动裁剪模式
         runOnUiThread(new Runnable() {
@@ -184,6 +188,11 @@ public class CameraPortraitActivity extends Activity implements View.OnClickList
                 //将手动裁剪区域设置成与扫描框一样大
 
                 mIvCameraCrop.setImageBitmap(mCropBitmap);
+
+                Intent intent = new Intent();
+                intent.putExtra(IDCardCamera.IMAGE_PATH, cropfile.getAbsolutePath());
+                setResult(IDCardCamera.RESULT_CODE, intent);
+                finish();
             }
         });
     }

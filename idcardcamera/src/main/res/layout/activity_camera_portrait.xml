@@ -3,7 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     >
-    <!-- android:background="@color/color_000000" -->
 
     <!--相机预览-->
     <com.wildma.idcardcamera.camera.CameraPreview
@@ -16,62 +15,105 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-
         <View
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="208dp"
             android:background="@color/preview_mock"
             android:id="@+id/headerMock"/>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="200dp">
-
+            android:layout_height="240dp">
             <View
-                android:layout_width="0dp"
+                android:layout_width="16dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@color/preview_mock_red"
+                android:background="@color/preview_mock"
                 android:id="@+id/leftMock"/>
             <!--相机裁剪区域-->
-            <ImageView
-                android:id="@+id/iv_camera_crop"
-                android:layout_width="300dp"
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="match_parent"
-                android:scaleType="fitXY"
-                android:src="@mipmap/camera_idcard_back" />
+                android:id="@+id/cropContainer">
+                <ImageView
+                    android:id="@+id/cropIv"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/camera_passport_front" />
+                <TextView
+                    android:id="@+id/arrow_left"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#FCD535"
+                    android:layout_marginBottom="20dp"
+                    android:layout_gravity="bottom|center_horizontal"/>
+            </FrameLayout>
+
 
             <View
-                android:layout_width="0dp"
+                android:layout_width="16dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@color/preview_mock_red" />
+                android:background="@color/preview_mock" />
 
         </LinearLayout>
 
-
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:background="@color/preview_mock_blue">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@color/preview_mock"
+            android:gravity="center_horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="front side of Id Card"/>
-        </LinearLayout>
+                android:text="Back side of ID Card"
+                android:textColor="#EAECEF"
+                android:textSize="20sp"
+                android:layout_marginTop="32dp"
+                android:id="@+id/camera_title"/>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:background="@color/preview_mock" >
-
-            <Button
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="拍照"
-                android:id="@+id/iv_camera_take"/>
+                android:text="Place the Back of the ID card in the frame"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:layout_marginTop="8dp"
+                android:id="@+id/camera_desc"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/preview_mock">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginBottom="@dimen/shutter_button_margin">
+
+                <ImageButton
+                    android:id="@+id/iv_camera_take"
+                    android:layout_width="@dimen/round_button_large"
+                    android:layout_height="@dimen/round_button_large"
+                    android:scaleType="fitCenter"
+                    android:background="@drawable/ic_shutter"
+                    android:layout_gravity="center"/>
+
+                <ImageButton
+                    android:id="@+id/photo_view_button"
+                    android:layout_width="@dimen/round_button_medium"
+                    android:layout_height="@dimen/round_button_medium"
+                    android:layout_gravity="center|right"
+                    android:padding="@dimen/spacing_large"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_photo"
+                    android:layout_marginRight="@dimen/margin_small"/>
+
+            </FrameLayout>
         </LinearLayout>
 
     </LinearLayout>
